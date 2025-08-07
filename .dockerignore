@@ -1,0 +1,44 @@
+# Build artifacts
+dist/
+*.exe
+
+# Git directory
+.git/
+.gitignore
+
+# Documentation
+*.md
+CHANGELOG.md
+LICENSE
+
+# Development files
+.commitlint/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# CI/CD
+.github/
+.goreleaser.yaml
+
+# Package files
+*.deb
+*.rpm
+*.pkg
+*.dmg
+
+# Other build files
+PKGBUILD-git
+wix.json
+icon.png
+icon.svg
+
+# Release files
+release-please-config.json
