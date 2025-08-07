@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.1](https://github.com/jurienhamaker/commitlint/compare/v1.9.0...v1.9.1) (2025-08-06)
+
+
+### Bug Fixes
+
+* **internal/commands:** Replace both carriage return (\r) and new line (\n) characters at the end of piped invocation ([3b10616](https://github.com/jurienhamaker/commitlint/commit/8aa43de20c8ec87688586d22ca0a66a6e2414e5))
+
 ## [1.9.0](https://github.com/jurienhamaker/commitlint/compare/v1.8.2...v1.9.0) (2025-07-09)
 
 
