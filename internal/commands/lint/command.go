@@ -83,7 +83,7 @@ func validateInput(input []string) (message string, err error) {
 		}
 
 		dataStr := string(data)
-		dataStr = strings.TrimRight(dataStr, "\n")
+		dataStr = strings.TrimRight(dataStr, "\r\n")
 		input = []string{dataStr}
 	}
 
