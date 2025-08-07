@@ -19,8 +19,8 @@ builds:
 
 release:
   github:
-    owner: jurienhamaker
-    name: commitlint
+    owner: "{{ .Env.GITHUB_REPOSITORY_OWNER }}"
+    name: "{{ .Env.GITHUB_REPOSITORY_NAME }}"
   draft: false
   replace_existing_artifacts: true
   mode: keep-existing
@@ -40,44 +40,45 @@ archives:
       - goos: windows
         formats: [zip]
 
-aurs:
-  - name: commitlint-go-bin
-    homepage: https://github.com/jurienhamaker/commitlint
-    description: A lightweight, fast, and cross-platform CLI tool for linting Git commit messages.
-    maintainers:
-      - "Jurien Hamaker <whoami@jurien.dev>"
-    license: MIT
-    private_key: "{{ .Env.AUR_PRIVATE_KEY }}"
-    git_url: "ssh://aur@aur.archlinux.org/commitlint-go-bin.git"
-    provides:
-      - commitlint
-    conflicts:
-      - commitlint
-    depends:
-      - git
-    package: |-
-      # bin
-      install -Dm755 "./commitlint" "${pkgdir}/usr/bin/commitlint"
-    commit_author:
-      name: "{{ .Env.AUR_USERNAME }}"
-      email: "{{ .Env.AUR_EMAIL }}"
-    commit_msg_template: "Automated update for commitlint-go-bin AUR package"
+# Disabled external package managers for fork
+# aurs:
+#   - name: commitlint-go-bin
+#     homepage: https://github.com/jurienhamaker/commitlint
+#     description: A lightweight, fast, and cross-platform CLI tool for linting Git commit messages.
+#     maintainers:
+#       - "Jurien Hamaker <whoami@jurien.dev>"
+#     license: MIT
+#     private_key: "{{ .Env.AUR_PRIVATE_KEY }}"
+#     git_url: "ssh://aur@aur.archlinux.org/commitlint-go-bin.git"
+#     provides:
+#       - commitlint
+#     conflicts:
+#       - commitlint
+#     depends:
+#       - git
+#     package: |-
+#       # bin
+#       install -Dm755 "./commitlint" "${pkgdir}/usr/bin/commitlint"
+#     commit_author:
+#       name: "{{ .Env.AUR_USERNAME }}"
+#       email: "{{ .Env.AUR_EMAIL }}"
+#     commit_msg_template: "Automated update for commitlint-go-bin AUR package"
 
-homebrew_casks:
-  - name: commitlint-go
-    homepage: https://github.com/jurienhamaker/homebrew-commitlint-go
-    description: A lightweight, fast, and cross-platform CLI tool for linting Git commit messages.
-    binary: commitlint
-    repository:
-      owner: jurienhamaker
-      name: homebrew-commitlint-go
-      token: "{{ .Env.GITHUB_PERSONAL_AUTH_TOKEN }}"
+# homebrew_casks:
+#   - name: commitlint-go
+#     homepage: https://github.com/jurienhamaker/homebrew-commitlint-go
+#     description: A lightweight, fast, and cross-platform CLI tool for linting Git commit messages.
+#     binary: commitlint
+#     repository:
+#       owner: jurienhamaker
+#       name: homebrew-commitlint-go
+#       token: "{{ .Env.GITHUB_PERSONAL_AUTH_TOKEN }}"
 
-snapcrafts:
-  - name: commitlint
-    title: Commitlint
-    summary: A lightweight, fast, and cross-platform tool for linting Git commit messages
-    description: |
-      Linting commit messages helps maintain a consistent commit history, which is critical for readability, automation, and collaboration across teams.
-    grade: stable
-    publish: true
+# snapcrafts:
+#   - name: commitlint
+#     title: Commitlint
+#     summary: A lightweight, fast, and cross-platform tool for linting Git commit messages
+#     description: |
+#       Linting commit messages helps maintain a consistent commit history, which is critical for readability, automation, and collaboration across teams.
+#     grade: stable
+#     publish: true
