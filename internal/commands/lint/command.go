@@ -21,6 +21,7 @@ import (
 
 type Lint struct {
 	Message []string `arg:"" help:"The message to lint" default:""`
+	File    *string  `short:"f" help:"Read commit message from file (defaults to .git/COMMIT_EDITMSG)"`
 }
 
 func (i Lint) Run(ctx *kong.Context) error {
@@ -36,7 +37,7 @@ func (i Lint) Run(ctx *kong.Context) error {
 		os.Exit(0)
 	}
 
-	message, err := validateInput(i.Message)
+	message, err := validateInput(i.Message, i.File)
 	if err != nil {
 		utils.ReplyError(err.Error())
 		os.Exit(1)
@@ -74,7 +75,25 @@ func (i Lint) Run(ctx *kong.Context) error {
 	return nil
 }
 
-func validateInput(input []string) (message string, err error) {
+func validateInput(input []string, file *string) (message string, err error) {
+	// Priority: file input > piped input > command arguments
+	if file != nil {
+		filePath := *file
+		if filePath == "" {
+			// Default to .git/COMMIT_EDITMSG when --file flag is used without argument
+			filePath = ".git/COMMIT_EDITMSG"
+		}
+
+		data, fileErr := os.ReadFile(filePath)
+		if fileErr != nil {
+			err = fmt.Errorf("could not read file %s: %s", filePath, fileErr)
+			return
+		}
+
+		message = string(data)
+		return
+	}
+
 	if isInputPiped() {
 		data, dataErr := io.ReadAll(os.Stdin)
 		if dataErr != nil {
