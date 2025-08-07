@@ -23,20 +23,14 @@ jobs:
           fetch-depth: 0
       - name: Set up Go
         uses: actions/setup-go@v5
-      - name: Install Snapcraft
-        uses: samuelmeuli/action-snapcraft@v3
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ github.ref_name }}
           VERSION: ${{ github.ref_name }}
-          GITHUB_PERSONAL_AUTH_TOKEN: ${{ secrets.PAT }}
-          AUR_PRIVATE_KEY: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
-          AUR_USERNAME: ${{ secrets.AUR_USERNAME }}
-          AUR_EMAIL: ${{ secrets.AUR_EMAIL }}
-          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
-          # GORELEASER_KEY: ${{ secrets.GORELEASER_KEY }}
+          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
+          GITHUB_REPOSITORY_NAME: ${{ github.event.repository.name }}
         with:
           # either 'goreleaser' (default) or 'goreleaser-pro'
           distribution: goreleaser
@@ -51,7 +45,7 @@ jobs:
 
       - name: Download latest release and unzip
         run: |
-          $github = Invoke-WebRequest -Uri https://api.github.com/repos/jurienhamaker/commitlint/releases/latest | ConvertFrom-Json
+          $github = Invoke-WebRequest -Uri https://api.github.com/repos/${{ github.repository }}/releases/latest | ConvertFrom-Json
           $installerUrl = $github.assets | Where-Object -Property name -match 'commitlint_Windows_x86_64.zip' | Select -ExpandProperty browser_download_url -First 1
           Invoke-WebRequest $installerUrl -OutFile windows.zip
           Expand-Archive -Path windows.zip -DestinationPath unzipped
@@ -73,18 +67,3 @@ jobs:
           asset_name: commitlint_installer.msi
           tag: ${{ github.ref_name }}
           overwrite: true
-  update-winget:
-    name: Publish winget package
-    runs-on: ubuntu-latest
-    needs: create-msi
-    steps:
-      - name: Submit package to Windows Package Manager Community Repository
-        uses: vedantmgoyal2009/winget-releaser@v2
-        with:
-          identifier: Commitlint.Commitlint
-          # Exclude all `*-msvc-full.msi` full release files,
-          # and only the default `*msvc.msi` files will be included
-          installers-regex: 'commitlint_installer\.msi$'
-          version: ${{ env.VERSION }}
-          release-tag: ${{ github.ref_name }}
-          token: ${{ secrets.WINGET_TOKEN }}
